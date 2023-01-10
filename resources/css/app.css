@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+div.dataTables_filter {
+    width: max-content;
+    float: right;
+    padding: 15px;
+}
+
+div.dataTables_length {
+    width: max-content;
+    float: left;
+    padding: 15px;
+}
+
+div.dataTables_paginate.paging_simple_numbers {
+    width: max-content;
+    float: left;
+    margin: 25px 20px;
+}
+
+div.dataTables_info {
+    width: max-content;
+    float: right;
+    margin: 25px 20px;
+}
+
+div label select {
+    width: 60px;
+    border:0
+}
+
+div label input {
+    height: 30px;
+    border: 1px solid #00000050;
+    border-radius: .25rem;
+}
+
+#myTable tr td {
+    padding: .75rem 1rem;
+}
+
+a.paginate_button {
+    padding: 5px;
+}
+
+a.paginate_button.previous.disabled {
+    padding-left: 0;
+}
