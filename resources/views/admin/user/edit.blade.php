@@ -1,6 +1,6 @@
 <x-admin.wrapper>
     <x-slot name="title">
-        {{ Breadcrumbs::render('user.edit',$user) }}
+{{--        {{ Breadcrumbs::render('user.edit',$user) }}--}}
     </x-slot>
 
     <div>
@@ -8,6 +8,7 @@
         <x-admin.form.errors />
     </div>
     <div class="w-full py-2 bg-white overflow-hidden">
+
 
         <form method="POST" action="{{ route('user.update', $user->id) }}">
         @csrf

@@ -1,6 +1,6 @@
 <x-admin.wrapper>
     <x-slot name="title">
-        {{ Breadcrumbs::render('user.show',$user) }}
+{{--        {{ Breadcrumbs::render('user.show',$user) }}--}}
     </x-slot>
 
     <div class="d-print-none with-border">

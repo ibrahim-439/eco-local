@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Actions\Admin\User\CreateUser;
+use App\Actions\Admin\User\UpdateUser;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = (new \App\Models\User)->newQuery();
+        $users = (new User)->newQuery();
 
         if (request()->has('search')) {
             $users->where('name', 'Like', '%'.request()->input('search').'%');
@@ -44,7 +50,6 @@ class UserController extends Controller
         return view('admin.user.index', compact('users'));
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -52,64 +57,151 @@ class UserController extends Controller
      */
     public function create()
     {
-//        $roles = Role::all();
+        $roles = Role::all();
 
-        return view('admin.user.create');
+        return view('admin.user.create', compact('roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Admin\StoreUserRequest  $request
+     * @param  \App\Actions\Admin\User\CreateUser  $createUser
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request, CreateUser $createUser)
     {
-        //
+        $createUser->handle($request);
+        toastr()->success('User created successfully.');
+
+        return redirect()->route('user.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\c  $c
+     * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function show(c $c)
+    public function show(User $user)
     {
-        //
+
+        $roles = Role::all();
+        $userHasRoles = array_column(json_decode($user->roles, true), 'id');
+
+        return view('admin.user.show', compact('user', 'roles', 'userHasRoles'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param User $user
-     * @return void
+     * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($id)
     {
-//        return view('posts.edit', compact('user'));
+        $user = User::find($id);
+        $roles = Role::all();
+        $userHasRoles = array_column(json_decode($user->roles, true), 'id');
+
+        return view('admin.user.edit', compact('user', 'roles', 'userHasRoles'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\c  $c
+     * @param  \App\Http\Requests\Admin\UpdateUserRequest  $request
+     * @param User $user
+     * @param  \App\Actions\Admin\User\UpdateUser  $updateUser
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, c $c)
+    public function update(UpdateUserRequest $request, User $user, UpdateUser $updateUser)
     {
-        //
+        $updateUser->handle($request, $user);
+
+        toastr()->success('User updated successfully.');
+        return redirect()->route('user.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\c  $c
+     * @param User $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(c $c)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        toastr()->success('User deleted successfully.');
+        return redirect()->route('user.index');
+    }
+
+    /**
+     * Show the user a form to change their personal information & password.
+     */
+    public function accountInfo()
+    {
+        $user = \Auth::user();
+
+        return view('admin.user.account_info', compact('user'));
+    }
+
+    /**
+     * Save the modified personal information for a user.
+     */
+    public function accountInfoStore(Request $request)
+    {
+        $request->validateWithBag('account', [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.\Auth::user()->id],
+        ]);
+
+        $user = \Auth::user()->update($request->except(['_token']));
+
+        if ($user) {
+            $message = 'Account updated successfully.';
+        } else {
+            $message = 'Error while saving. Please try again.';
+        }
+
+        return redirect()->route('admin.account.info')->with('account_message', __($message));
+    }
+
+    /**
+     * Save the new password for a user.
+     */
+    public function changePasswordStore(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'old_password' => ['required'],
+            'new_password' => ['required', Rules\Password::defaults()],
+            'confirm_password' => ['required', 'same:new_password', Rules\Password::defaults()],
+        ]);
+
+        $validator->after(function ($validator) use ($request) {
+            if ($validator->failed()) {
+                return;
+            }
+            if (! Hash::check($request->input('old_password'), \Auth::user()->password)) {
+                $validator->errors()->add(
+                    'old_password', __('Old password is incorrect.')
+                );
+            }
+        });
+
+        $validator->validateWithBag('password');
+
+        $user = \Auth::user()->update([
+            'password' => Hash::make($request->input('new_password')),
+        ]);
+
+        if ($user) {
+            $message = 'Password updated successfully.';
+        } else {
+            $message = 'Error while saving. Please try again.';
+        }
+
+        return redirect()->route('admin.account.info')->with('password_message', __($message));
     }
 }
