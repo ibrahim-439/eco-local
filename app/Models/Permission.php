@@ -9,6 +9,7 @@ class Permission extends OriginalPermission
     protected $fillable = [
         'name',
         'guard_name',
+        'category',
         'updated_at',
         'created_at',
     ];

@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
+use App\Events\Logined;
+use App\Listeners\SendEmailLogin;
+use App\Listeners\storeUserLoginHistory;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+//use App\Events\LoginHistory;
+//use App\Listeners\storeUserLoginHistory;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,6 +23,13 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+//        LoginHistory::class => [
+//            StoreUserLoginHistory::class,
+//        ],
+        Logined::class => [
+            SendEmailLogin::class,
+            StoreUserLoginHistory::class,
+        ]
     ];
 
     /**

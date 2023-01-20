@@ -1,13 +1,14 @@
 <x-admin.wrapper>
     <x-slot name="title">
-{{--        {{ Breadcrumbs::render('permission.show',$permission) }}--}}
+        <h2 class="inline-block text-2xl sm:text-3xl  text-slate-900   block sm:inline-block flex">
+            View permission
+        </h2>
+
     </x-slot>
 
-    <div class="d-print-none with-border">
-        <x-admin.breadcrumb href="{{route('permission.index')}}" title="{{ __('View permission') }}"></x-admin.breadcrumb>
-    </div>
+
     <div class="w-full py-2">
-        <div class="min-w-full border-b border-gray-200 shadow">
+        <div class="min-w-full  border-gray-200 ">
             <table class="table-fixed w-full text-sm">
                 <tbody class="bg-white">
 

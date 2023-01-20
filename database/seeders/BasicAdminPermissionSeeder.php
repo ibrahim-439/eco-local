@@ -22,41 +22,30 @@ class BasicAdminPermissionSeeder extends Seeder
 
         // create permissions
         $permissions = [
-
-
+            'permission main',
             'permission list',
             'permission create',
             'permission edit',
             'permission delete',
 
 
+            'role main',
             'role list',
             'role create',
             'role edit',
             'role delete',
 
+            'user main',
             'user list',
             'user create',
             'user edit',
             'user delete',
 
-            'products list',
-            'products create',
-            'products edit',
-            'products delete',
-
-            'categoryProducts list',
-            'categoryProducts create',
-            'categoryProducts edit',
-            'categoryProducts delete',
-
-            'categoryProducts read',
-            'stores read',
-            'admin read',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission,
+                'category' => explode(' ',$permission)[0]]);
         }
 
         // create roles and assign existing permissions
@@ -70,15 +59,15 @@ class BasicAdminPermissionSeeder extends Seeder
             $role2->givePermissionTo($permission);
         }
 
-        $role3 = Role::create(['name' => 'super-admin']);
 
+        $role3 = Role::create(['name' => 'super-admin']);
         $user = \App\Models\User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
             'password' => Hash::make('Pa$$w0rd!'),
 
         ]);
-        $user->assignRole($role3);
+        $user->assignRole($role2);
 
         $user = \App\Models\User::factory()->create([
             'name' => 'Admin User',

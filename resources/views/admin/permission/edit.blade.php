@@ -1,12 +1,12 @@
 <x-admin.wrapper>
     <x-slot name="title">
-{{--        {{ Breadcrumbs::render('permission.edit',$permission) }}--}}
+        <h2 class="inline-block text-2xl sm:text-3xl  text-slate-900   block sm:inline-block flex">
+            Update permission
+        </h2>
+
     </x-slot>
 
-    <div>
-        <x-admin.breadcrumb href="{{route('permission.index')}}" title="{{ __('Update permission') }}"></x-admin.breadcrumb>
-        <x-admin.form.errors />
-    </div>
+
     <div class="w-full py-2 bg-white overflow-hidden">
 
         <form method="POST" action="{{ route('permission.update', $permission->id) }}">
