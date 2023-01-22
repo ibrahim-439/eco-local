@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePermissionRequest;
 use App\Http\Requests\Admin\UpdatePermissionRequest;
 use App\Models\Permission;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 
 class PermissionController extends Controller
 {
@@ -14,10 +19,11 @@ class PermissionController extends Controller
 
     }
 
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
     public function index()
     {
@@ -47,7 +53,7 @@ class PermissionController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
     public function create()
     {
@@ -57,8 +63,8 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\Admin\StorePermissionRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StorePermissionRequest $request
+     * @return RedirectResponse
      */
     public function store(StorePermissionRequest $request)
     {
@@ -70,51 +76,53 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Permission  $permission
-     * @return \Illuminate\Http\Response
+     * @param Permission $permission
+     * @return Application|Factory|View
      */
-    public function show(Permission $permission)
+    public function show($permission)
     {
+        $permission = Permission::findOrFail($permission);
         return view('admin.permission.show', compact('permission'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Permission  $permission
-     * @return \Illuminate\Http\Response
+     * @param Permission $permission
+     * @return Application|Factory|View
      */
-    public function edit(Permission $permission)
+    public function edit( $permission)
     {
+        $permission = Permission::findOrFail($permission);
         return view('admin.permission.edit', compact('permission'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\Admin\UpdatePermissionRequest  $request
-     * @param  \App\Models\Permission  $permission
-     * @return \Illuminate\Http\Response
+     * @param UpdatePermissionRequest $request
+     * @param Permission $permission
+     * @return RedirectResponse
      */
-    public function update(UpdatePermissionRequest $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, $permission)
     {
+        $permission = Permission::findOrFail($permission);
         $permission->update($request->all());
         toastr()->success('Permission updated successfully!');
-        return redirect()->route('permission.index')
-            ;
+        return redirect()->route('permission.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Permission  $permission
-     * @return \Illuminate\Http\Response
+     * @param Permission $permission
+     * @return RedirectResponse
      */
-    public function destroy(Permission $permission)
+    public function destroy($permission)
     {
+        $permission = Permission::findOrFail($permission);
         $permission->delete();
         toastr()->success('Permission deleted successfully!');
-        return redirect()->route('permission.index')
-            ;
+        return redirect()->route('permission.index');
     }
 }

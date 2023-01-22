@@ -1,6 +1,16 @@
 <x-admin.wrapper>
-    <x-slot name="title">
-{{--        {{ Breadcrumbs::render('permission.index') }}--}}
+
+    <x-slot  name="title">
+        <div class="flex justify-between items-center">
+            <h2 class="inline-block text-2xl sm:text-3xl  text-slate-900   block sm:inline-block flex">
+                List permissions
+            </h2>
+            @can('permission create')
+                <x-admin.add-link href="{{ route('permission.create') }}">
+                    {{ __('Add Permission') }}
+                </x-admin.add-link>
+            @endcan
+        </div>
     </x-slot>
 
 
@@ -10,11 +20,7 @@
             <div class="flex justify-between  items-center mb-5">
 
                 <x-admin.grid.search action="{{ route('permission.index') }}" />
-                @can('permission create')
-                    <x-admin.add-link href="{{ route('permission.create') }}">
-                        {{ __('Add Permission') }}
-                    </x-admin.add-link>
-                @endcan
+
             </div>
             <div class="w-full mb-8 overflow-hidden rounded-lg ">
                 <div class="w-full overflow-x-auto">

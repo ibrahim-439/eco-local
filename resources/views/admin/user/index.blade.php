@@ -1,7 +1,16 @@
 <x-admin.wrapper>
 
-    <x-slot name="title">
-{{--        {{ Breadcrumbs::render('user.index') }}--}}
+    <x-slot  name="title">
+        <div class="flex justify-between items-center">
+            <h2 class="inline-block text-2xl sm:text-3xl  text-slate-900   block sm:inline-block flex">
+                List users
+            </h2>
+            @can('user create')
+                <x-admin.add-link href="{{ route('user.create') }}">
+                    {{ __('Add User') }}
+                </x-admin.add-link>
+            @endcan
+        </div>
     </x-slot>
 
 
@@ -10,11 +19,7 @@
         <div class="min-w-full border-b border-gray-200  overflow-x-auto">
             <div class="flex justify-between  items-center mb-5">
                 <x-admin.grid.search action="{{ route('user.index') }}" />
-                @can('user create')
-                    <x-admin.add-link href="{{ route('user.create') }}">
-                        {{ __('Add User') }}
-                    </x-admin.add-link>
-                @endcan
+
             </div>
             <div class="w-full mb-8 overflow-hidden rounded-lg ">
                 <div class="w-full overflow-x-auto">
@@ -26,6 +31,12 @@
                                 </x-admin.grid.th>
                                 <x-admin.grid.th>
                                     @include('admin.includes.sort-link', ['label' => 'Email', 'attribute' => 'email'])
+                                </x-admin.grid.th>
+                                <x-admin.grid.th>
+                                    @include('admin.includes.sort-link', ['label' => 'Parent', 'attribute' => 'parent_id'])
+                                </x-admin.grid.th>
+                                <x-admin.grid.th>
+                                    @include('admin.includes.sort-link', ['label' => 'Date create', 'attribute' => 'created_at'])
                                 </x-admin.grid.th>
                                 @canany(['user edit', 'user delete'])
                                 <x-admin.grid.th>
@@ -47,29 +58,45 @@
                                         {{ $user->email }}
                                     </div>
                                 </x-admin.grid.td>
-                                @canany(['user edit', 'user delete'])
-                                <x-admin.grid.td style="width: 150px">
-                                    <form action="{{ route('user.destroy', $user->id) }}" method="POST">
-                                        <div class="flex">
-                                            @can('user edit')
-                                            <a href="{{route('user.edit', $user->id)}}" >
-                                                <x-icons.edit />
-                                            </a>
-                                            @endcan
-
-                                            @can('user delete')
-                                            @csrf
-                                            @method('DELETE')
-                                            <button onclick="return confirm('{{ __('Are you sure you want to delete?') }}')">
-                                               <x-icons.delete />
-                                            </button>
-                                            @endcan
-                                        </div>
-                                    </form>
+                                <x-admin.grid.td>
+                                    <div class="text-sm text-gray-900">
+                                        @if(isset($user->parent->name))
+                                            <a href="{{route('user.show', $user->parent->id)}}"> {{ $user->parent->name }} </a>
+                                        @else
+                                            ---
+                                        @endif
+                                    </div>
                                 </x-admin.grid.td>
+                                <x-admin.grid.td>
+                                    <div class="text-sm text-gray-900">
+                                        {{$user->created_at}}
+                                    </div>
+                                </x-admin.grid.td>
+
+                                @canany(['user edit', 'user delete'])
+                                    <x-admin.grid.td style="width: 150px">
+                                        <form action="{{ route('user.destroy', $user->id) }}" method="POST">
+                                            <div class="flex">
+                                                @can('user edit')
+                                                <a href="{{route('user.edit', $user->id)}}" >
+                                                    <x-icons.edit />
+                                                </a>
+                                                @endcan
+
+                                                @can('user delete')
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button onclick="return confirm('{{ __('Are you sure you want to delete?') }}')">
+                                                       <x-icons.delete />
+                                                    </button>
+                                                @endcan
+                                            </div>
+                                        </form>
+                                    </x-admin.grid.td>
                                 @endcanany
                             </tr>
                             @endforeach
+
                             @if($users->isEmpty())
                                 <tr>
                                     <td colspan="3">
@@ -79,6 +106,7 @@
                                     </td>
                                 </tr>
                             @endif
+
                         </x-slot>
                     </x-admin.grid.table>
                 </div>

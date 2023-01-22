@@ -1,12 +1,13 @@
 <x-admin.wrapper>
-    <x-slot name="title">
-{{--        {{ Breadcrumbs::render('permission.create') }}--}}
+    <x-slot  name="title">
+        <div class="flex justify-between items-center">
+            <h2 class="inline-block text-2xl sm:text-3xl  text-slate-900   block sm:inline-block flex">
+                Create permission
+            </h2>
+        </div>
     </x-slot>
 
-    <div>
-        <x-admin.breadcrumb href="{{route('permission.index')}}" title="{{ __('Create permission') }}"></x-admin.breadcrumb>
-        <x-admin.form.errors />
-    </div>
+
     <div class="w-full py-2 bg-white overflow-hidden">
 
         <form method="POST" action="{{ route('permission.store') }}">

@@ -21,7 +21,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'profile',
         'password',
+        'gender',
+        'parent_id',
+        'phone',
     ];
 
     /**
@@ -42,4 +46,13 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function children(){
+        return $this->hasMany( 'App\Models\User', 'parent_id', 'id' );
+    }
+
+    public function parent(){
+        return $this->hasOne( 'App\Models\User', 'id', 'parent_id' );
+    }
+
 }
