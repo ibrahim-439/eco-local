@@ -32,9 +32,7 @@
                                 <x-admin.grid.th>
                                     @include('admin.includes.sort-link', ['label' => 'Email', 'attribute' => 'email'])
                                 </x-admin.grid.th>
-                                <x-admin.grid.th>
-                                    @include('admin.includes.sort-link', ['label' => 'Parent', 'attribute' => 'parent_id'])
-                                </x-admin.grid.th>
+
                                 <x-admin.grid.th>
                                     @include('admin.includes.sort-link', ['label' => 'Date create', 'attribute' => 'created_at'])
                                 </x-admin.grid.th>
@@ -58,15 +56,7 @@
                                         {{ $user->email }}
                                     </div>
                                 </x-admin.grid.td>
-                                <x-admin.grid.td>
-                                    <div class="text-sm text-gray-900">
-                                        @if(isset($user->parent->name))
-                                            <a href="{{route('user.show', $user->parent->id)}}"> {{ $user->parent->name }} </a>
-                                        @else
-                                            ---
-                                        @endif
-                                    </div>
-                                </x-admin.grid.td>
+
                                 <x-admin.grid.td>
                                     <div class="text-sm text-gray-900">
                                         {{$user->created_at}}

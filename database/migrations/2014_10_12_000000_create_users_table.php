@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('parent_id')->unsigned()->nullable();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -26,9 +25,6 @@ return new class extends Migration
             $table->timestamp('deactivated_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-
-
-            $table->foreign('parent_id')->references('id')->on('users');
         });
     }
 

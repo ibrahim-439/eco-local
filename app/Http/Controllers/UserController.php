@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Admin\User\CreateUser;
-use App\Actions\Admin\User\UpdateUser;
+use App\Actions\Admin\User\CreateClient;
+use App\Actions\Admin\User\UpdateClient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdatePasswordUserRequest;
@@ -33,7 +33,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = (new User)->with('parent')->newQuery();
+        $users = (new User)->newQuery();
 
         if (request()->has('search')) {
             $users->where('name', 'Like', '%'.request()->input('search').'%');
@@ -75,15 +75,14 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreUserRequest $request
-     * @param CreateUser $createUser
+     * @param CreateClient $createUser
      * @return RedirectResponse
      */
-    public function store(StoreUserRequest $request, CreateUser $createUser)
+    public function store(StoreUserRequest $request, CreateClient $createUser)
     {
 
         $createUser->handle($request);
         toastr()->success('User created successfully.');
-
         return redirect()->route('user.index');
     }
 
@@ -128,10 +127,10 @@ class UserController extends Controller
      *
      * @param UpdateUserRequest $request
      * @param User $user
-     * @param UpdateUser $updateUser
+     * @param UpdateClient $updateUser
      * @return Response
      */
-    public function update(UpdateUserRequest $request, $user, UpdateUser $updateUser)
+    public function update(UpdateUserRequest $request, $user, UpdateClient $updateUser)
     {
         $user = User::findOrFail($user);
         $updateUser->handle($request, $user);
@@ -147,10 +146,10 @@ class UserController extends Controller
      *
      * @param UpdatePasswordUserRequest $request
      * @param User $user
-     * @param UpdateUser $updateUser
+     * @param UpdateClient $updateUser
      * @return Response
      */
-    public function updatePassword(UpdatePasswordUserRequest $request, $user, UpdateUser $updateUser)
+    public function updatePassword(UpdatePasswordUserRequest $request, $user, UpdateClient $updateUser)
     {
         $user = User::findOrFail($user);
         $updateUser->changePassword($request, $user);

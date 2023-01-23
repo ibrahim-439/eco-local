@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
@@ -24,7 +24,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile',
         'password',
         'gender',
-        'parent_id',
         'phone',
     ];
 
@@ -47,12 +46,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function children(){
-        return $this->hasMany( 'App\Models\User', 'parent_id', 'id' );
-    }
-
-    public function parent(){
-        return $this->hasOne( 'App\Models\User', 'id', 'parent_id' );
+    public function client(){
+        return $this->hasMany( Client::class, 'user_id', 'id' );
     }
 
 }

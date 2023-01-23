@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PermissionController;
@@ -69,6 +70,19 @@ Route::group([
             Route::delete('destroy/{id}', [RoleController::class,'destroy'])->name('role.destroy');
             Route::get('edit/{id}', [RoleController::class,'edit'])->name('role.edit');
             Route::put('update/{id}', [RoleController::class,'update'])->name('role.update');
+
+        });
+
+        Route::group([
+            'prefix' => 'client',
+        ], function () {
+            Route::get('/', [ClientController::class,'index'])->name('client.index');
+            Route::get('create', [ClientController::class,'create'])->name('client.create');
+            Route::post('store', [ClientController::class,'store'])->name('client.store');
+            Route::get('show/{id}', [ClientController::class,'show'])->name('client.show');
+            Route::delete('destroy/{id}', [ClientController::class,'destroy'])->name('client.destroy');
+            Route::get('edit/{id}', [ClientController::class,'edit'])->name('client.edit');
+            Route::put('update/{id}', [ClientController::class,'update'])->name('client.update');
 
         });
 
