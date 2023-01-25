@@ -47,6 +47,8 @@ class ClientController extends Controller
 
 
 
+
+
         return view('admin.clients.index', compact('clients'));
     }
 
